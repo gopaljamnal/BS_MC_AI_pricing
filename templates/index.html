@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI-Enhanced Option Pricing Tool</title>
+</head>
+<body>
+    <h2>Live AI-Enhanced Option Pricing Tool</h2>
+    <form id="optionForm">
+        <label>Stock Ticker:</label><input type="text" name="ticker" required><br>
+        <label>Strike Price:</label><input type="number" name="strike_price" required><br>
+        <label>Days to Expiry:</label><input type="number" name="time_to_expiry" required><br>
+        <label>Risk-Free Rate (%):</label><input type="number" name="risk_free_rate" step="0.01" required><br>
+        <button type="submit">Calculate</button>
+    </form>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById("optionForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch("/", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await response.json();
+            document.getElementById("results").innerHTML = `
+                <h3>Pricing Results for ${data.Ticker}:</h3>
+                <p>Stock Price: $${data["Stock Price"]}</p>
+                <p>Sentiment Score: ${data["Sentiment Score"]}</p>
+                <p>Adjusted Volatility: ${data["Adjusted Volatility"]}</p>
+                <p>Black-Scholes Price: $${data["Black-Scholes Price"]}</p>
+                <p>Monte Carlo Price: $${data["Monte Carlo Price"]}</p>
+            `;
+        };
+    </script>
+</body>
+</html>

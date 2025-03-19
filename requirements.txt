@@ -1,0 +1,10 @@
+flask
+flask-cors
+yfinance
+finnhub-python
+requests
+transformers
+torch
+pandas
+scipy
+numpy
