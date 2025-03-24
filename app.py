@@ -206,4 +206,10 @@ def calculate_american():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    pass
+
+
+def handler(event, context):
+    with app.request_context(event):
+        return app.full_dispatch_request()
