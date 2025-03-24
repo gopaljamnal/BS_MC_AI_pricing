@@ -1,6 +1,7 @@
+from flask import Flask, render_template, request, jsonify
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+
+app = Flask(__name__)
 
 
 class OptionPricing:
@@ -32,11 +33,8 @@ class OptionPricing:
         # THIS IS THE AVERAGE VALUE !!!
         average = np.sum(np.amax(option_data, axis=1)) / float(self.iterations)
 
-
-
-
         # have to use the exp(-rT) discount factor
-        return np.exp(-1.0*self.rf*self.T)*average
+        return np.exp(-1.0 * self.rf * self.T) * average
 
     def put_option_simulation(self):
         # we have 2 columns: first with 0s the second column will store the payoff
@@ -59,12 +57,43 @@ class OptionPricing:
         average = np.sum(np.amax(option_data, axis=1)) / float(self.iterations)
 
         # have to use the exp(-rT) discount factor
-        return np.exp(-1.0*self.rf*self.T)*average
+        return np.exp(-1.0 * self.rf * self.T) * average
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/calculate', methods=['POST'])
+def calculate():
+    try:
+        # Get parameters from the form
+        S0 = float(request.form.get('S0'))
+        E = float(request.form.get('E'))
+        T = float(request.form.get('T'))
+        rf = float(request.form.get('rf'))
+        sigma = float(request.form.get('sigma'))
+        iterations = int(request.form.get('iterations'))
+
+        # Create pricing model using the provided class
+        model = OptionPricing(S0, E, T, rf, sigma, iterations)
+
+        # Calculate option prices
+        call_price = model.call_option_simulation()
+        put_price = model.put_option_simulation()
+
+        return jsonify({
+            'success': True,
+            'call_price': round(call_price, 4),
+            'put_price': round(put_price, 4)
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 400
 
 
 if __name__ == '__main__':
-    model = OptionPricing(100, 100, 1, 0.05, 0.2, 10000)
-    print('Value of the call option is $%.2f' % model.call_option_simulation())
-    print('Value of the put option is $%.2f' % model.put_option_simulation())
-
-
+    app.run(debug=True)

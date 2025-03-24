@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 NUM_OF_SIMULATIONS = 1000
 
 
-def stock_monte_carlo(S0, mu, sigma, N=252):
+def stock_monte_carlo(S0, mu, sigma, N=30):
 
     result = []
 
@@ -26,10 +26,15 @@ def stock_monte_carlo(S0, mu, sigma, N=252):
 
     simulation_data['mean'] = simulation_data.mean(axis=1)
 
+    plt.plot(simulation_data)
+
+    plt.show()
+
     plt.plot(simulation_data['mean'])
     plt.show()
 
     print('Prediction for future stock price: $%.2f' % simulation_data['mean'].tail(1))
+    print(simulation_data)
 
 
 if __name__ == '__main__':
