@@ -1,7 +1,12 @@
 from flask import Flask, render_template, request, jsonify
 import numpy as np
 
-app = Flask(__name__)
+
+# app = Flask(__name__)
+
+
+app = Flask(__name__, static_folder='static') # Important!
+
 
 
 class EuropeanOptionPricing:

@@ -9,6 +9,5 @@
       "src": "/(.*)",
       "dest": "/api/app.py"
     }
-  ],
-  "static": ["static"]
+  ]
 }
